@@ -1,15 +1,9 @@
 const express = require("express");
 const axios = require("axios");
-const cors = require("cors");
 const router = new express.Router();
 
 
-const corsOptions = {
-  origin: ['https://api.mangadex.org', 'https://uploads.mangadex.org'],
-  optionsSuccessStatus: 200,
-};
-
-router.get("/", cors(corsOptions), async (req, res) => {
+router.get("/", async (req, res) => {
   const o = req.query.offset || 0;
   const f = req.query.status;
   const s = req.query.search;
@@ -40,7 +34,7 @@ router.get("/", cors(corsOptions), async (req, res) => {
   }
 });
 
-router.get("/cover", cors(corsOptions), async (req, res) => {
+router.get("/cover",  async (req, res) => {
   let c = req.query.id;
   const cover = await axios({
     method: "GET",
@@ -56,7 +50,7 @@ router.get("/cover", cors(corsOptions), async (req, res) => {
   res.status(200).send(cover.data.data.attributes.fileName);
 });
 
-router.get("/chapters", cors(corsOptions),  async (req, res) => {
+router.get("/chapters", async (req, res) => {
   let id = req.query.id;
   const chapters = await axios({
     method: "GET",
@@ -66,7 +60,7 @@ router.get("/chapters", cors(corsOptions),  async (req, res) => {
   res.status(200).send(chapters.data);
 });
 
-router.get("/read", cors(corsOptions),  async (req, res) => {
+router.get("/read", async (req, res) => {
   let id = req.query.id;
   const resp = await axios({
     method: "GET",
