@@ -42,16 +42,14 @@ router.get("/cover", async (req, res) => {
     timeout: 2000,
   });
 
-  if (cover) {
-    // const i = await axios({
-    //   method: "GET",
-    //   url: `https://uploads.mangadex.org/covers/${dataID}/${cover.data.data.attributes.fileName}.256.jpg`,
-    //   timeout: 2000,
-    // });
-    let url = `https://uploads.mangadex.org/covers/${dataID}/${cover.data.data.attributes.fileName}.256.jpg`
-    return res.status(200).send({"url": url});
+  if (!cover?.data?.data?.attributes?.fileName) {
+    return res.status(404).json({ message: "Cover file not found" });
   }
-  res.status(404).json("cover not found")
+
+  const fileName = cover.data.data.attributes.fileName;
+  const fullCoverUrl = `https://uploads.mangadex.org/covers/${dataID}/${fileName}.256.jpg`;
+
+  return res.status(200).json({ url: fullCoverUrl });
 });
 
 router.get("/chapters", async (req, res) => {
