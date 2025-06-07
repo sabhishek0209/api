@@ -2,7 +2,6 @@ const express = require("express");
 const axios = require("axios");
 const router = new express.Router();
 
-
 router.get("/", async (req, res) => {
   const o = req.query.offset || 0;
   const f = req.query.status;
@@ -34,20 +33,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/cover",  async (req, res) => {
+router.get("/cover", async (req, res) => {
   let c = req.query.id;
+  let dataID = req.query.dataID;
   const cover = await axios({
     method: "GET",
     url: `https://api.mangadex.org/cover/${c}`,
     timeout: 2000,
   });
 
-  /* const i = await axios({
-    method: "GET",
-    url: `https://uploads.mangadex.org/covers/5b947fed-957b-44e1-8889-d998b95ba3e4/${cover.data.data.attributes.fileName}.256.jpg`,
-    timeout: 2000,
-  }); */
-  res.status(200).send(cover.data.data.attributes.fileName);
+  if (cover) {
+    const i = await axios({
+      method: "GET",
+      url: `https://uploads.mangadex.org/covers/${dataID}/${cover.data.data.attributes.fileName}.256.jpg`,
+      timeout: 2000,
+    });
+    return res.status(200).send(i);
+  }
+  res.status(404).json("cover not found")
 });
 
 router.get("/chapters", async (req, res) => {
